@@ -7,8 +7,9 @@ import {
   FiMonitor,
   FiMapPin,
 } from "react-icons/fi";
+import api from "../../services/api";
 
-const API_URL = "http://localhost:5000/api";
+
 
 export default function AdminTheatres() {
   const [theatres, setTheatres] = useState([]);
@@ -28,50 +29,43 @@ export default function AdminTheatres() {
   capacity: "100",
   });
 
-  const getToken = () => localStorage.getItem("flickt_token");
+
 
   // Fetch saved theatres and available cities from the backend.
   async function loadData() {
-    setLoading(true);
-    setError("");
+  setLoading(true);
+  setError("");
 
-    try {
-      const token = getToken();
+  try {
+    const [theatreResponse, cityResponse] = await Promise.all([
+      api.get("/admin/theatres"),
+      api.get("/cities"),
+    ]);
 
-      if (!token) {
-        throw new Error("Please log in as an administrator again.");
-      }
+    const theatreData = theatreResponse.data;
+    const cityData = cityResponse.data;
 
-      const [theatreResponse, cityResponse] = await Promise.all([
-        fetch(`${API_URL}/admin/theatres`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        fetch(`${API_URL}/cities`),
-      ]);
+    setTheatres(
+      Array.isArray(theatreData)
+        ? theatreData
+        : theatreData.theatres || theatreData.data || []
+    );
 
-      const theatreData = await theatreResponse.json();
-      const cityData = await cityResponse.json();
-
-      if (!theatreResponse.ok) {
-        throw new Error(
-          theatreData.message || "Could not load theatres."
-        );
-      }
-
-      if (!cityResponse.ok) {
-        throw new Error(cityData.message || "Could not load cities.");
-      }
-
-      setTheatres(Array.isArray(theatreData) ? theatreData : []);
-      setCities(Array.isArray(cityData) ? cityData : []);
-    } catch (err) {
-      setError(err.message || "Failed to load data.");
-    } finally {
-      setLoading(false);
-    }
+    setCities(
+      Array.isArray(cityData)
+        ? cityData
+        : cityData.cities || cityData.data || []
+    );
+  } catch (err) {
+    setError(
+      err.response?.data?.message ||
+        err.message ||
+        "Failed to load theatres and cities."
+    );
+  } finally {
+    setLoading(false);
   }
+}
 
   useEffect(() => {
     loadData();
@@ -105,32 +99,18 @@ async function handleSubmit(event) {
   setSuccess("");
 
   try {
-    const token = getToken();
-
-    if (!token) {
-      throw new Error("Please log in as an administrator again.");
+    if (!form.name.trim() || !form.cityId || !form.address.trim()) {
+      setError("Please fill in all required fields.");
+      return;
     }
 
-    const response = await fetch(`${API_URL}/admin/theatres`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        name: form.name.trim(),
-        cityId: form.cityId,
-        address: form.address.trim(),
-        screens: Number(form.screens),
-        capacity: Number(form.capacity),
-      }),
+    const response = await api.post("/admin/theatres", {
+      name: form.name.trim(),
+      cityId: form.cityId,
+      address: form.address.trim(),
+      screens: Number(form.screens),
+      capacity: Number(form.capacity),
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to save theatre.");
-    }
 
     setSuccess("Theatre added successfully!");
 
@@ -144,50 +124,43 @@ async function handleSubmit(event) {
 
     setShowForm(false);
 
-    // Fetch saved records again from MongoDB.
+    // Reload theatres from the backend/database
     await loadData();
   } catch (err) {
-    setError(err.message || "Failed to save theatre.");
+    setError(
+      err.response?.data?.message ||
+        err.message ||
+        "Failed to save theatre."
+    );
   } finally {
     setSaving(false);
   }
 }
 
 
-  async function deleteTheatre(id) {
-    if (!window.confirm("Are you sure you want to remove this theatre?")) {
-      return;
-    }
-
-    setError("");
-    setSuccess("");
-
-    try {
-      const token = getToken();
-
-      if (!token) {
-        throw new Error("Please log in as an administrator again.");
-      }
-
-      const response = await fetch(`${API_URL}/admin/theatres/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Could not remove theatre.");
-      }
-
-      setSuccess("Theatre removed successfully.");
-      await loadData();
-    } catch (err) {
-      setError(err.message || "Failed to remove theatre.");
-    }
+ async function deleteTheatre(id) {
+  if (!window.confirm("Are you sure you want to remove this theatre?")) {
+    return;
   }
+
+  setError("");
+  setSuccess("");
+
+  try {
+    await api.delete(`/admin/theatres/${id}`);
+
+    setSuccess("Theatre removed successfully.");
+
+    // Refresh the list after deletion
+    await loadData();
+  } catch (err) {
+    setError(
+      err.response?.data?.message ||
+        err.message ||
+        "Failed to remove theatre."
+    );
+  }
+}
 
   return (
     <section className="admin-panel">

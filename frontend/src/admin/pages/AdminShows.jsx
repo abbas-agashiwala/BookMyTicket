@@ -7,31 +7,7 @@ import {
   FiTrash2,
   FiRefreshCw,
 } from "react-icons/fi";
-
-const API_URL = "http://localhost:5000/api";
-
-function getToken() {
-  return localStorage.getItem("flickt_token");
-}
-
-async function apiRequest(path, options = {}) {
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
-      ...options.headers,
-    },
-  });
-
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(data.message || `Request failed (${response.status})`);
-  }
-
-  return data;
-}
+import api from "../../services/api";
 
 function getId(value) {
   return typeof value === "object" && value !== null ? value._id : value;
@@ -108,21 +84,36 @@ export default function AdminShows() {
     setError("");
 
     try {
-      const [showData, movieData, cityData, theatreData, screenData] =
-        await Promise.all([
-          apiRequest("/admin/shows"),
-          apiRequest("/admin/movies"),
-          apiRequest("/cities"),
-          apiRequest("/admin/theatres"),
-          apiRequest("/admin/screens"),
-        ]);
+  const [
+    showResponse,
+    movieResponse,
+    cityResponse,
+    theatreResponse,
+    screenResponse,
+  ] = await Promise.all([
+    api.get("/admin/shows"),
+    api.get("/admin/movies"),
+    api.get("/cities"),
+    api.get("/admin/theatres"),
+    api.get("/admin/screens"),
+  ]);
 
-      setShows(Array.isArray(showData) ? showData : []);
-      setMovies(Array.isArray(movieData) ? movieData : []);
-      setCities(Array.isArray(cityData) ? cityData : []);
-      setTheatres(Array.isArray(theatreData) ? theatreData : []);
-      setScreens(Array.isArray(screenData) ? screenData : []);
-    } catch (err) {
+  const showData = showResponse.data;
+  const movieData = movieResponse.data;
+  const cityData = cityResponse.data;
+  const theatreData = theatreResponse.data;
+  const screenData = screenResponse.data;
+
+  setShows(Array.isArray(showData) ? showData : showData.shows || []);
+  setMovies(Array.isArray(movieData) ? movieData : movieData.movies || []);
+  setCities(Array.isArray(cityData) ? cityData : cityData.cities || []);
+  setTheatres(
+    Array.isArray(theatreData) ? theatreData : theatreData.theatres || []
+  );
+  setScreens(
+    Array.isArray(screenData) ? screenData : screenData.screens || []
+  );
+} catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
@@ -209,19 +200,18 @@ export default function AdminShows() {
         throw new Error("Enter a valid price for every seat category.");
       }
 
-      const savedShow = await apiRequest("/admin/shows", {
-        method: "POST",
-        body: JSON.stringify({
-          movieId: form.movieId,
-          theatreId: form.theatreId,
-          screenId: form.screenId,
-          startTime: start.toISOString(),
-          endTime: end.toISOString(),
-          language: form.language,
-          format: form.format,
-          pricing,
-        }),
-      });
+      const response = await api.post("/admin/shows", {
+  movieId: form.movieId,
+  theatreId: form.theatreId,
+  screenId: form.screenId,
+  startTime: start.toISOString(),
+  endTime: end.toISOString(),
+  language: form.language,
+  format: form.format,
+  pricing,
+});
+
+const savedShow = response.data;
 
       setShows((previous) => [...previous, savedShow]);
       setForm({
@@ -255,13 +245,13 @@ export default function AdminShows() {
     setSuccess("");
 
     try {
-      await apiRequest(`/admin/shows/${id}`, {
-        method: "DELETE",
-      });
+      await api.delete(`/admin/shows/${id}`);
 
-      setShows((previous) => previous.filter((show) => show._id !== id));
+setShows((previous) =>
+  previous.filter((show) => show._id !== id)
+);
 
-      setSuccess("Show deleted successfully.");
+setSuccess("Show deleted successfully.");
     } catch (err) {
       setError(err.message);
     }

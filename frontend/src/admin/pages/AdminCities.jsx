@@ -6,10 +6,7 @@ import {
   FiSearch,
   FiTrash2,
 } from "react-icons/fi";
-
-const API_URL = "http://localhost:5000/api/cities";
-
-const ADMIN_CITIES_URL = "http://localhost:5000/api/admin/cities";
+import api from "../../services/api";
 
 export default function AdminCities() {
   const [cities, setCities] = useState([]);
@@ -22,8 +19,7 @@ export default function AdminCities() {
 
   
   
-const getToken = () =>
-  localStorage.getItem("flickt_token") || "";
+
 
 
   const loadCities = useCallback(async () => {
@@ -31,24 +27,14 @@ const getToken = () =>
     setError("");
 
     try {
-      const response = await fetch(API_URL, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
+      const response = await api.get("/cities");
+const data = response.data;
 
-      if (!response.ok) {
-        throw new Error(
-          response.status === 404
-            ? "The cities API is not available yet. Add the backend route first."
-            : `Could not load cities (HTTP ${response.status}).`,
-        );
-      }
+const list = Array.isArray(data)
+  ? data
+  : data.cities || data.data || [];
 
-      const data = await response.json();
-      const list = Array.isArray(data) ? data : data.cities || data.data || [];
-
-      setCities(list);
+setCities(list);
     } catch (err) {
       setError(err.message || "Could not connect to the server.");
     } finally {
@@ -82,24 +68,12 @@ const getToken = () =>
     setMessage("");
 
     try {
-      const response = await fetch(ADMIN_CITIES_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify({ name }),
-      });
+      const response = await api.post("/admin/cities", { name });
 
-      const result = await response.json().catch(() => ({}));
+setCityName("");
+setMessage("City added successfully.");
+await loadCities();
 
-      if (!response.ok) {
-        throw new Error(result.message || "Could not add city.");
-      }
-
-      setCityName("");
-      setMessage("City added successfully.");
-      await loadCities();
     } catch (err) {
       setError(err.message || "Could not add city.");
     } finally {
@@ -125,20 +99,10 @@ const getToken = () =>
     setMessage("");
 
     try {
-      const response = await fetch(`${ADMIN_CITIES_URL}/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
+      await api.delete(`/admin/cities/${id}`);
 
-      if (!response.ok) {
-        const result = await response.json().catch(() => ({}));
-        throw new Error(result.message || "Could not remove city.");
-      }
-
-      setMessage(`${name} removed successfully.`);
-      await loadCities();
+setMessage(`${name} removed successfully.`);
+await loadCities();
     } catch (err) {
       setError(err.message || "Could not remove city.");
     }

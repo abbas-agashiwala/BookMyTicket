@@ -6,8 +6,7 @@ import {
   FiTrash2,
   FiFilm,
 } from "react-icons/fi";
-
-const API_URL = "http://localhost:5000/api";
+import api from "../../services/api";
 
 const emptyForm = {
   title: "",
@@ -47,19 +46,12 @@ export default function AdminMovies() {
         throw new Error("Please log in as an administrator again.");
       }
 
-      const response = await fetch(`${API_URL}/admin/movies`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.get("/admin/movies");
+const data = response.data;
 
-      const data = await response.json();
+setMovies(Array.isArray(data) ? data : data.movies || []);
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to load movies.");
-      }
-
-      setMovies(Array.isArray(data) ? data : []);
+      
     } catch (err) {
       setError(err.message || "Could not load movies.");
     } finally {
@@ -138,28 +130,13 @@ export default function AdminMovies() {
         status: form.status,
       };
 
-      const response = await fetch(`${API_URL}/admin/movies`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(movieData),
-      });
+      await api.post("/admin/movies", movieData);
 
-      const data = await response.json();
+setForm(emptyForm);
+setShowForm(false);
+setSuccess("Movie saved successfully.");
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to save movie.");
-      }
-
-      setForm(emptyForm);
-      setShowForm(false);
-      setSuccess("Movie saved successfully.");
-
-      // Reload the actual database records.
-      await loadMovies();
-      setSuccess("Movie saved successfully.");
+await loadMovies();
     } catch (err) {
       setError(err.message || "Could not save movie.");
     } finally {
@@ -186,24 +163,10 @@ export default function AdminMovies() {
         throw new Error("Please log in as an administrator again.");
       }
 
-      const response = await fetch(
-        `${API_URL}/admin/movies/${movie._id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await api.delete(`/admin/movies/${movie._id}`);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to delete movie.");
-      }
-
-      setSuccess("Movie deleted successfully.");
-      await loadMovies();
+setSuccess("Movie deleted successfully.");
+await loadMovies();
     } catch (err) {
       setError(err.message || "Could not delete movie.");
     }
