@@ -1,0 +1,231 @@
+.checkout-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(260px,.8fr);gap:18px;align-items:start}.checkout-card{background:#1b1b1b;border:1px solid #303030;border-radius:14px;padding:24px}.checkout-movie{display:flex;gap:16px}.checkout-movie img{width:76px;height:110px;object-fit:cover;border-radius:7px}.checkout-movie h3,.checkout-card h3{font-size:16px;font-weight:800;margin:0 0 8px}.checkout-movie span{display:block;color:#999;font-size:11px;margin:6px 0}.selected-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.selected-tags b{font-size:10px;color:#ffb09a;background:#3a211a;border:1px solid #663b2e;padding:5px 8px;border-radius:5px}.checkout-divider{height:1px;background:#303030;margin:22px 0}.price-breakdown>div{display:flex;justify-content:space-between;gap:15px;padding:9px 0;color:#aaa;font-size:12px}.price-breakdown b{color:#eee;font-size:12px}.price-breakdown .total-line{border-top:1px dashed #414141;margin-top:8px;padding-top:17px;color:#fff;font-size:14px}.price-breakdown .total-line b{font-size:19px;color:#fff}.text-action{background:none;border:0;color:var(--accent);font-size:11px;padding:10px 0 0}.pay-card{background:radial-gradient(ellipse at 100% 0,#472117,#1b1b1b 60%)}.pay-card h2{font-size:26px;line-height:1.1;font-weight:850;letter-spacing:-1px;margin:14px 0}.pay-card>p{font-size:12px;line-height:1.7;color:#aaa}.pay-total{display:flex;flex-direction:column;gap:5px;border-top:1px solid #ffffff22;padding-top:20px;margin-top:25px}.pay-total span{font-size:11px;color:#aaa}.pay-total b{font-size:29px}.pay-card>small{display:flex;justify-content:center;align-items:center;gap:6px;color:#888;font-size:9px;margin-top:14px}.secure-tag{color:var(--success);background:#14251f;border-color:#244e40}.payment-option{display:flex;align-items:center;gap:12px;padding:14px 12px;border:1px solid #383838;border-radius:9px;margin:10px 0;cursor:pointer}.payment-option:has(input:checked){border-color:var(--accent);background:#ff5a360b}.payment-option input,.terms-check input{accent-color:var(--accent)}.payment-option>span:nth-of-type(1){display:flex;flex-direction:column;gap:4px;flex:1}.payment-option b{font-size:12px}.payment-option small{font-size:10px;color:#999}.pay-brand{font-size:10px;color:#8ac6ff;font-weight:800}.terms-check{display:flex;align-items:flex-start;gap:8px;font-size:10px;color:#aaa;margin:20px 0}.terms-check input{margin-top:2px}.order-card h3{margin-top:15px}.order-card>p{font-size:11px;color:#999}.success-page{min-height:75vh;display:flex;align-items:center;flex-direction:column;text-align:center;padding-top:45px}.success-icon{width:65px;height:65px;display:grid;place-items:center;border-radius:50%;background:#163329;border:1px solid #28664e;color:var(--success);font-size:30px;margin-bottom:20px}.success-page h1{font-size:42px;letter-spacing:-2px;font-weight:900;margin:8px 0}.success-page>p{font-size:12px;color:#aaa;max-width:420px;line-height:1.7}.ticket-card{width:min(100%,450px);background:#1c1c1c;border:1px solid #383838;border-radius:14px;padding:20px;margin:24px 0;text-align:left;position:relative;overflow:hidden}.ticket-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #444;padding-bottom:15px;margin-bottom:18px}.ticket-head b{font-size:22px;letter-spacing:-1px}.ticket-head>span{font-size:8px;letter-spacing:1.5px;color:#999}.ticket-card>img{width:78px;height:112px;object-fit:cover;float:left;margin:0 15px 12px 0;border-radius:6px}.ticket-card h2{font-size:18px;font-weight:800}.ticket-card p{font-size:11px;color:#aaa;margin:6px 0}.ticket-ref{clear:both;border-top:1px dashed #444;padding-top:15px;margin-top:20px;display:flex;flex-direction:column;gap:6px}.ticket-ref span{font-size:8px;letter-spacing:1.5px;color:#888}.ticket-ref b{font-size:18px;letter-spacing:2px}.success-page>.btn-primary-custom{margin-top:8px}@media(max-width:700px){.checkout-grid{grid-template-columns:1fr}.checkout-card{padding:19px}.pay-card{order:-1}.booking-page{padding-top:20px}.booking-top h1{font-size:24px}.success-page h1{font-size:35px}}
+
+
+
+/* ==============================
+   FLICKT NOTIFICATIONS PAGE
+================================ */
+
+.notifications-page {
+  width: 100%;
+  max-width: 1180px;
+  min-height: 75vh;
+  margin: 0 auto;
+  padding: 42px 28px 70px;
+  box-sizing: border-box;
+}
+
+/* Page heading */
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.notifications-header .eyebrow {
+  color: #ff5a36;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.notifications-header h1 {
+  margin: 9px 0 8px;
+  color: #fff;
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 850;
+  letter-spacing: -1.2px;
+}
+
+.notifications-header h1 span {
+  color: #ff5a36;
+}
+
+.notifications-header p {
+  margin: 0;
+  color: #999;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Notification list */
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Individual notification */
+.notification-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  width: 100%;
+  padding: 22px 24px;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #1d1d1d, #171717);
+  border: 1px solid #303030;
+  border-radius: 15px;
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+.notification-card:hover {
+  border-color: #ff5a3670;
+  background: #202020;
+  transform: translateY(-2px);
+}
+
+/* Icon */
+.notification-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  color: #ff6848;
+  background: #ff5a3618;
+  border: 1px solid #ff5a3635;
+  border-radius: 12px;
+  font-size: 21px;
+}
+
+/* Notification text */
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.notification-card-top h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.5;
+}
+
+.notification-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  color: #ff997f;
+  background: #ff5a3618;
+  border: 1px solid #ff5a3635;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Message */
+.notification-content > p {
+  margin: 0;
+  max-width: 850px;
+  color: #c4c4c4;
+  font-size: 14px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+/* Date and time */
+.notification-time {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 16px;
+  padding-top: 13px;
+  color: #858585;
+  border-top: 1px solid #2d2d2d;
+  font-size: 12px;
+}
+
+.notification-time svg {
+  flex-shrink: 0;
+  color: #ff6848;
+}
+
+/* Empty notifications message */
+.notifications-page > p {
+  padding: 26px;
+  color: #aaa;
+  background: #191919;
+  border: 1px solid #303030;
+  border-radius: 12px;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .notifications-page {
+    padding: 32px 20px 50px;
+  }
+
+  .notification-card {
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .notification-icon {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .notifications-page {
+    padding: 26px 15px 40px;
+  }
+
+  .notifications-header {
+    margin-bottom: 22px;
+  }
+
+  .notifications-header p {
+    font-size: 13px;
+  }
+
+  .notification-list {
+    gap: 12px;
+  }
+
+  .notification-card {
+    gap: 12px;
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .notification-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 17px;
+  }
+
+  .notification-card-top h3 {
+    font-size: 14px;
+  }
+
+  .notification-content > p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .notification-time {
+    margin-top: 12px;
+    padding-top: 11px;
+    font-size: 11px;
+  }
+}

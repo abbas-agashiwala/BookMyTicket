@@ -1,0 +1,45 @@
+.seat-map{display:flex;flex-direction:column;gap:9px;align-items:center;width:100%;padding:24px 0 20px;overflow-x:auto}.seat-row{display:flex;align-items:center;gap:7px;min-width:max-content}.row-label{font-size:9px;color:#747474;width:12px;text-align:center}.seat{height:25px;width:28px;border:1px solid #4b4b4b;border-radius:6px 6px 3px 3px;background:#242424;color:#999;font-size:9px;padding:0;transition:all .15s}.seat.available{background:#202020;border-color:#4d4d4d;color:#c7c7c7}.seat.available:hover{border-color:var(--accent);color:#fff;transform:translateY(-2px)}.seat.selected{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 14px #ff5a3640}.seat.booked{background:#454545;border-color:#454545;color:#777;opacity:.5;cursor:not-allowed}.seat.locked{background:#2a2622;border-color:#b88a48;color:#d8b57d;cursor:not-allowed}.seat.premium{background:#202d2a;border-color:#347b6a;color:#a8d9cb}.seat.premium.selected{background:var(--accent);border-color:var(--accent);color:#fff}.aisle{width:15px;flex-shrink:0}@media(max-width:550px){.seat-row{gap:5px}.seat{width:24px;height:23px;font-size:8px}.aisle{width:8px}.seat-map{align-items:flex-start;padding-left:4px}.row-label{width:8px}}
+
+
+
+/* Standard seats — gray */
+.seat.available {
+  background-color: #202020;
+  border: 1px solid #505050;
+  color: #f5f5f5;
+}
+
+/* Premium seats — teal */
+.seat.premium {
+  background-color: #183a35;
+  border: 1px solid #269b83;
+  color: #b8f5e5;
+}
+
+/* Recliner seats — orange-red */
+.seat.recliner {
+  background-color: #3a211c;
+  border: 1px solid #ff5738;
+  color: #ffb09c;
+}
+
+/* Selected seats — bright orange-red */
+.seat.selected {
+  background-color: #f45135;
+  border: 1px solid #f45135;
+  color: #ffffff;
+}
+
+/* Booked seats — dark gray */
+.seat.booked {
+  background-color: #414141;
+  border: 1px solid #414141;
+  color: #777777;
+}
+
+/* Locked seats — gold outline */
+.seat.locked {
+  background-color: #24211b;
+  border: 1px solid #b88632;
+  color: #f5cf83;
+}
